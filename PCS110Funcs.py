@@ -6,6 +6,7 @@ Created on Wed Nov 15 08:05:04 2023
 """
 #PCS110 Functions and Constants
 import math
+nTypes = [float, int]
 
 class Vector:
     
@@ -13,16 +14,20 @@ class Vector:
         #Can take a 3-tuple, or 3 variables
         if type(x) == tuple: 
             self.x, self.y, self.z = x
-        else:
+        elif type(x) in nTypes and type(y) in nTypes and type(z) in nTypes:
             self.x = x
             self.y = y
             self.z = z
+        else:
+            raise TypeError("Only floats and integers can be used to create a vector")
     
     def __str__(self):
         return f"<{self.x}, {self.y}, {self.z}>"
     
     def magnitude(self):
         return math.sqrt(self.x**2 + self.y**2 + self.z**2)
+    def mag(self): #Short alternative for magnitude
+        return self.magnitude()
     
     def unit(self):
         mag = self.magnitude()
