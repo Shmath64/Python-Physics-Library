@@ -24,6 +24,11 @@ class Vector:
     def magnitude(self):
         return math.sqrt(self.x**2 + self.y**2 + self.z**2)
     
+    def unit(self):
+        mag = self.magnitude()
+        unitize = lambda component: component / mag
+        return Vector(unitize(self.x), unitize(self.y), unitize(self.z))
+    
     @staticmethod
     def componentsFromAngles(thetax, thetay, thetaz):
         return math.cos(thetax), math.cos(thetay), math.cos(thetaz)
