@@ -22,6 +22,8 @@ Na = 6.02e23    #Atoms/mol - Avogadro's Number
 h = 6.6e-34     #J*s - Plank's Constant
 relativisticThreshold = 0.1 #At what velocity should relativistic effects be considered (in terms of c)
 defaultConstants ={"c":c,"G":G, "g":g,"me":me,"mp":mp,"mn":mn,"EC":EC,"e":e,"Na":Na,"h":h,"relativisticThreshold":relativisticThreshold}
+consts = {"c":c,"G":G, "g":g,"me":me,"mp":mp,"mn":mn,"EC":EC,"e":e,"Na":Na,"h":h,"relativisticThreshold":relativisticThreshold}
+
 
 degToRad = lambda x: x*(math.pi/180)
 radToDeg = lambda x: x*(180/math.pi)
@@ -210,48 +212,41 @@ def kineticEnergy(v, m): #gamma(mc**2) - mc**2 OR 1/2 mv**2
         return gamma(v)*restEnergy(m) - restEnergy(m)
     else:
         return 0.5 * m * (v**2)
+        
+def updateConstantsFromFile(file):
+    global g
+    lines = file.readlines()
+    for line in lines:
+        varName = line.split()[0]
+        value = line.split()[2]
+        print(varName, value)
+        globals()[varName] = float(value)
+        
+            
+def updateConstants():
+    file = open("constantsFile.txt", "r")
+    updateConstantsFromFile(file)
+    file.close()
 
-
-"""
-if __name__ == "__main__":
-    running = True
-    print("PCS110 Functions and Constants")
-    #while loop with inputs and checking things and stuff
-    while running:
-        inputString = input()
-        try:
-            if inputString.lower().strip() == "exit":
-                running = False
-            exec(inputString)
-        except:
-            print("Not a valid Input")
-"""
-    
 def restoreDefaultConstants():
     open('constantsFile.txt', 'w').close() #Clears content of file
     file = open("constantsFile.txt", "w")
     for c in defaultConstants: #Writes each constant to file
-        file.write(f"{c} : {defaultConstants[c]}\n")
-        
+        file.write(f"{c} : {defaultConstants[c]}\n") 
     file.close()
     f = open("constantsFile.txt", "r")
     updateConstantsFromFile(f)
-        
-def updateConstantsFromFile(file):
-    fLines = file.readlines()
-    for line in fLines: #For each line
-        item = line.split()[0] 
-        value = line.split()[2]
-        print(item, value)
-        globals()[item] = float(value) #Set the variable of the line to the value of the line.
-
+    f.close()
+    
+    
 if __name__ == "__main__":
     try:
-        f = open("constantsFile.txt", "r")
-        updateConstantsFromFile(f)
+        constFile = open("constantsFile.txt", "r")
+        updateConstantsFromFile(constFile)
+        constFile.close()
     except FileNotFoundError:
-        f = open("constantsFile.txt", "w")
-        restoreDefaultConstants()
-    f.close()
+        constFile = open("constantsFile.txt", "w")
+        restoreDefaultConstants(constFile)
+        constFile.close()
         
         
