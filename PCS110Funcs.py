@@ -111,7 +111,7 @@ def forceOfGravity(m1, m2, r) -> Union[Vector, float]: #Checked, Works!
         return Vector.scalarMultiply(r.unit(), fMag) #Return vector value
     
     elif checkNType(r):                 #If not a vector
-        return -(G * m1 * m2) / (r**2)  #Return scalar value
+        return (G * m1 * m2) / (r**2)  #Return scalar value
     
 def forceOfElectromagnetism(q1, q2, r) -> Union[Vector, float]:
     if isinstance(r, Vector):                        #If it's a vector
