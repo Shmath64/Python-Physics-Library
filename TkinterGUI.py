@@ -12,74 +12,101 @@ root.title("PCS110 Functions and Constants - Scientific notation (e.g. '7.2e6') 
 
 vector1 = Pf.Vector(0,0,0)
 
+def BPSaveVector1():
+    global vector1
+    vector1 = Pf.Vector(float(vector1xEntry.get()),float(vector1yEntry.get()),float(vector1zEntry.get()))
+    vector1AnsLabel["text"] = f"Vector1 = {str(vector1)}"
+    print(vector1)
+
 def BPGamma():
     v = float(gammavEntry.get())
     ans = str(Pf.gamma(v))
     gammaAnsLabel["text"] = ans
-    print(ans)
+    print("Gamma = " + ans)
 
-def BPFGrav():
+def BPFGrav(): #Scalar calculation of force of gravity
     m1 = float(fGravm1Entry.get())
     m2 = float(fGravm2Entry.get())
     r = float(fGravrEntry.get())
-    fGravAnsLabel["text"] = str(Pf.forceOfGravity(m1, m2, r)) + " N"
+    ans = str(Pf.forceOfGravity(m1, m2, r))
+    fGravAnsLabel["text"] = ans + " N"
+    print("Force of Gravity = " + ans)
     
-def BPSaveVector1():
-    global vector1
-    vector1 = Pf.Vector(float(vector1xEntry.get()),float(vector1yEntry.get()),float(vector1zEntry.get()))
-    vector1AnsLabel["text"] = f"Vector: '{str(vector1)}' Saved!"
-    print(vector1)
+def BPFGravV(): #Vector calculation of force of gravity
+    m1 = float(fGravVm1Entry.get())
+    m2 = float(fGravVm2Entry.get())
+    r = vector1
+    ans = str(Pf.forceOfGravity(m1, m2, r)) + " N"
+    fGravVAnsLabel["text"] = ans
+    print("Force of Gravity = " + ans)
     
 
 
 #Constants
-gammaRow = 1 #Lorentz Factor
-fGravRow = 2 #Force of gravity
-
+reservedRows = 1
 standardWidth = 10
 
 #LABELS:
+nullLabel = Label(root, text="") #Used for spacing
 
-vector1Label = Label(root, text="Vector 1:")    
+introFuncsLabel = Label(root, text="-Functions-") #Headings for the columns
+introInputsLabel = Label(root, text="-Inputs-")
+introOutputsLabel = Label(root, text="-Outputs-")
+    
+vector1FuncLabel = Label(root, text="Vector 1:") #Vector1 labels
 vector1xLabel = Label(root, text="x =")
 vector1yLabel = Label(root, text="y =")
 vector1zLabel = Label(root, text="z =")
 vector1AnsLabel = Label(root, text="")
 
-gammaFuncLabel = Label(root, text="Gamma (Lorentz Factor):")
+gammaFuncLabel = Label(root, text="Gamma (Lorentz Factor):") #Gamma func labels
 gammaAnsLabel = Label(root, text="")
 gammavLabel = Label(root, text="v =")
 
+fGravFuncLabel = Label(root, text="Force Of Gravity (Scalar):") #Force of gravity (scalar) labels
+fGravAnsLabel = Label(root, text="")
 fGravm1Label = Label(root, text="m1 =")
 fGravm2Label = Label(root, text="m2 =")
 fGravrLabel = Label(root, text="r =")
 fGravAnsLabel = Label(root, text="")
 
-fGravFuncLabel = Label(root, text="Force Of Gravity (Scalar):")
-fGravAnsLabel = Label(root, text="")
+fGravVFuncLabel = Label(root, text="Force Of Gravity (Vector):") #Force of gravity (Vector) labels
+fGravVAnsLabel = Label(root, text="")
+fGravVm1Label = Label(root, text="m1 =")
+fGravVm2Label = Label(root, text="m2 =")
+fGravVrLabel = Label(root, text="r =")
+fGravVAnsLabel = Label(root, text="")
+
 
 #BUTTONS:
+vector1Button = Button(root, text="Save", command=BPSaveVector1)
 gammaButton = Button(root, text="RUN", command=BPGamma)
 fGravButton = Button(root, text="RUN", command=BPFGrav)
-vector1Button = Button(root, text="Save", command=BPSaveVector1)
+fGravVButton = Button(root, text="RUN", command=BPFGravV)
+
 
 #Entry:
-vector1xEntry = Entry(root, width=standardWidth)
+vector1xEntry = Entry(root, width=standardWidth) #Vector1 argument entry
 vector1yEntry = Entry(root, width=standardWidth)
 vector1zEntry = Entry(root, width=standardWidth)
 
-gammavEntry = Entry(root, width=standardWidth)
+gammavEntry = Entry(root, width=standardWidth) #Gamma argument entry
 
-fGravm1Entry = Entry(root, width=standardWidth)
+fGravm1Entry = Entry(root, width=standardWidth) #Force of gravity (scalar) entry
 fGravm2Entry = Entry(root, width=standardWidth)
 fGravrEntry = Entry(root, width=standardWidth)
 
+fGravVm1Entry = Entry(root, width=standardWidth) #Force of gravity (vector) entry
+fGravVm2Entry = Entry(root, width=standardWidth)
+fGravVrEntry_Label = Label(root, text="Vector 1") #In entry location, but it is a label because r comes from Vector1
+
 #COLLECTIONS:
-vector1Parts = [vector1Label, vector1xLabel,vector1xEntry, vector1yLabel,vector1yEntry, vector1zLabel,vector1zEntry, vector1Button, vector1AnsLabel]
+#introParts = [introFuncsLabel,nullLabel,introInputsLabel]
+vector1Parts = [vector1FuncLabel, vector1xLabel,vector1xEntry, vector1yLabel,vector1yEntry, vector1zLabel,vector1zEntry, vector1Button, vector1AnsLabel]
 gammaParts = [gammaFuncLabel, gammavLabel, gammavEntry, gammaButton, gammaAnsLabel]
 fGravParts = [fGravFuncLabel, fGravm1Label, fGravm1Entry, fGravm2Label, fGravm2Entry, fGravrLabel, fGravrEntry, fGravButton,fGravAnsLabel]
-
-allFunctions = [vector1Parts, gammaParts, fGravParts]
+fGravVParts = [fGravVFuncLabel, fGravVm1Label, fGravVm1Entry, fGravVm2Label, fGravVm2Entry, fGravVrLabel, fGravVrEntry_Label, fGravVButton,fGravVAnsLabel]
+allFunctions = [vector1Parts, gammaParts, fGravParts, fGravVParts]
 
 #PLACEMENTS:
 
@@ -91,9 +118,13 @@ gammaButton.grid(row=gammaRow, column=3)
 gammaAnsLabel.grid(row=gammaRow,column=4)
 '''
 
+introFuncsLabel.grid(row=0,column=0)
+introInputsLabel.grid(row=0,column=2)
+introOutputsLabel.grid(row=0,column=8)
+
 for i, collection in enumerate(allFunctions):
     for j, part in enumerate(collection):
-        part.grid(row=i,column=j)
+        part.grid(row=i+reservedRows,column=j)
 
 '''
 for i, part in enumerate(gammaParts):

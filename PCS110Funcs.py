@@ -24,7 +24,6 @@ relativisticThreshold = 0.1 #At what velocity should relativistic effects be con
 defaultConstants ={"c":c,"G":G, "g":g,"me":me,"mp":mp,"mn":mn,"EC":EC,"e":e,"Na":Na,"h":h,"relativisticThreshold":relativisticThreshold}
 consts = {"c":c,"G":G, "g":g,"me":me,"mp":mp,"mn":mn,"EC":EC,"e":e,"Na":Na,"h":h,"relativisticThreshold":relativisticThreshold}
 
-
 degToRad = lambda x: x*(math.pi/180)
 radToDeg = lambda x: x*(180/math.pi)
 
@@ -57,7 +56,23 @@ class Vector:
         raise ZeroDivisionError("Cannot find unit vector of a zero vector")
     
     @staticmethod
-    def scalarMultiply(vector, scalar):
+    def scalarMultiply(vector: object, scalar: nTypes) -> object:
+        """
+        
+
+        Parameters
+        ----------
+        vector : Vector
+            Vector to be "scaled".
+        scalar : numerical (int | float)
+            "Scalar" that will multiply each component of the vector.
+
+        Returns
+        -------
+        Vector
+            The vector after scaling
+
+        """
         checkNType(scalar)
         vector.x *= scalar
         vector.y *= scalar
@@ -66,46 +81,120 @@ class Vector:
         
     
     @staticmethod
-    def componentsFromAngles(thetax, thetay, thetaz, usingRads=False): 
+    def componentsFromAngles(thetax: nTypes, thetay: nTypes, thetaz: nTypes, usingRads: bool = False) -> object: 
         """
 
         Parameters
         ----------
-        thetax : numerical type
-            DESCRIPTION.
-        thetay : numerical type
-            DESCRIPTION.
-        thetaz : numerical type
-            DESCRIPTION.
+        thetax : numerical (int | float)
+            Angle from the positive x-axis.
+        thetay : numerical (int | float)
+            Angle from the positive y-axis.
+        thetaz : numerical (int | float)
+            Angle from the positive z-axis..
         usingRads : bool, optional
-            DESCRIPTION. The default is False.
+            If true, calculate components with radians, if false, use degrees. The default is False.
 
         Returns
         -------
         Vector
-            DESCRIPTION.
+            The vector defined by each component being the cosine of theta; each component will be in the range [-1, 1].
+            This function does not account for impossible combinations of angles (e.g. if all angles are zero, <1,1,1> will be returned)
 
         """
         if usingRads: return math.cos(thetax), math.cos(thetay), math.cos(thetaz)
-        return math.cos(degToRad(thetax)), math.cos(degToRad(thetay)), math.cos(degToRad(thetaz))
+        return Vector(math.cos(degToRad(thetax)), math.cos(degToRad(thetay)), math.cos(degToRad(thetaz)))
         
 
-def checkNType(*args): #Any number of arguments
-    for arg in args:
-        if type(arg) not in nTypes:
+def checkNType(*args) -> bool:
+    """
+
+
+    Parameters
+    ----------
+    *args : any type, any number of arguments
+        Arguments to test if they're 'numerical'; that is, integer or float.
+
+    Raises
+    ------
+    TypeError
+        Raise a type error if ANY of the arguments are not integers or floats.
+
+    Returns
+    -------
+    bool
+        True, if all arguments are 'numerical'.
+
+    """
+    
+    for arg in args: #For each argument
+        if type(arg) not in nTypes: #If not integer or float,
             raise TypeError(f"Must be a numerical value (float or integer)\n{arg} is not a float or an integer")
     return True
 
-def checkNTypeTuple(t):
-    for x in t:
-        if type(x) not in nTypes:
-            raise TypeError("The tuple must only contain numerical values (floats or integers)")
+def checkNTypeTuple(t: tuple) -> bool:
+    """
+    
+
+    Parameters
+    ----------
+    t : Tuple
+        Tuple of elements to check if EACH element is 'numerical'; that is, integer or float
+
+    Raises
+    ------
+    TypeError
+        Raise a type error if ANY of the elements in the tuple are not an integer or float.
+
+    Returns
+    -------
+        True, if all elements are 'numerical.
+
+    """
+    return checkNType(*t) #CheckNType for each element in the tuple
             
-def gamma(v): #Lorentz Factor
+
+def gamma(v: nTypes) -> float:
+    """
+    
+
+    Parameters
+    ----------
+    v : numerical (int | float)
+        Speed (scalar) in m/s.
+
+    Returns
+    -------
+    float
+        The lorentz Factor (gamma) of a particle moving at that speed.
+        Equation: Gamma = 1 / math.sqrt(1-(v**2 / c**2))
+    """
     checkNType(v)
     return 1 / math.sqrt(1-(v**2 / c**2))
 
-def forceOfGravity(m1, m2, r) -> Union[Vector, float]: #Checked, Works!
+
+def forceOfGravity(m1: nTypes, m2: nTypes, r: Union[int, float, Vector]) -> Uniton[float, Vector]:
+    """
+    
+
+    Parameters
+    ----------
+    m1 : numerical (int | float)
+        mass of body 1 (body exerting force) (kg).
+    m2 : numerical (int | float)
+        mass of body 2 (body on which force is exerted) (kg).
+    r : numerical (int | float) OR Vector
+        If int | float, the distance between center of masses of bodies one and two (m).
+        If Vector, the vector pointing from body 2 to body 1. (m) (Reciprocity theorem)
+
+    Returns
+    -------
+    float | Vector
+        If r is an int | float, the magnitude of the force of gravity. (N)
+        If r is a Vector, the force of gravity on body 2 by body 1. (N)
+        Uses Newton's law of universal gravitation
+
+    """
     if isinstance(r, Vector):                        #If it's a vector
         fMag = -(G * m1 * m2) / (r.magnitude()**2)   #Get magnitude of force
         return Vector.scalarMultiply(r.unit(), fMag) #Return vector value
@@ -113,7 +202,28 @@ def forceOfGravity(m1, m2, r) -> Union[Vector, float]: #Checked, Works!
     elif checkNType(r):                 #If not a vector
         return (G * m1 * m2) / (r**2)  #Return scalar value
     
-def forceOfElectromagnetism(q1, q2, r) -> Union[Vector, float]:
+def forceOfElectromagnetism(q1: nTypes, q2: nTypes, r: Union[int, float, Vector]) -> Union[float, Vector]:
+    """
+    
+
+    Parameters
+    ----------
+    q1 : numerical (int | float)
+        Charge of body 1 (body exerting force) (C).
+    q2 : numerical (int | float)
+        Charge of body 2 (body on which force is exerted (C).
+    r : TYPE
+        If int | float, the distance between bodies one and two (m).
+        If Vector, the vector pointing from body 2 to body 1. (Reciprocity theorem) (m).
+
+    Returns
+    -------
+    float | Vector
+        If r is an int | float, the magnitude of the force of electromagnetism. (N)
+        If r is a Vector, the force of gravity on body 2 by body 1. (N)
+        Uses Newton's law of universal gravitation
+
+    """
     if isinstance(r, Vector):                        #If it's a vector
         fMag = -(EC * q1 * q2) / (r.magnitude()**2)   #Get magnitude of force
         return Vector.scalarMultiply(r.unit(), fMag) #Return vector value
