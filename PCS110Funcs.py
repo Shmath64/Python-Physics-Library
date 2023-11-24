@@ -8,8 +8,10 @@ Created on Wed Nov 15 08:05:04 2023
 import math
 from typing import Union
 
-#CONSTANTS (default values - can be overwritten by constants.txt)
 nTypes = (float, int) #Numerical types; used for checking data types
+running = False 
+
+#CONSTANTS (default values - can be overwritten by constants.txt)
 c = 3e8         #m/s - speed of light
 G = 6.7e-11     #N*m**2 - Gravitational Constant
 g = 9.8         #N/kg - Approx. gravitational field near Earth's surface
@@ -21,8 +23,8 @@ e = 1.6e-19     #C - Proton Charge
 Na = 6.02e23    #Atoms/mol - Avogadro's Number
 h = 6.6e-34     #J*s - Plank's Constant
 relativisticThreshold = 0.1 #At what velocity should relativistic effects be considered (in terms of c)
+
 defaultConstants ={"c":c,"G":G, "g":g,"me":me,"mp":mp,"mn":mn,"EC":EC,"e":e,"Na":Na,"h":h,"relativisticThreshold":relativisticThreshold}
-consts = {"c":c,"G":G, "g":g,"me":me,"mp":mp,"mn":mn,"EC":EC,"e":e,"Na":Na,"h":h,"relativisticThreshold":relativisticThreshold}
 
 degToRad = lambda x: x*(math.pi/180)
 radToDeg = lambda x: x*(180/math.pi)
@@ -173,7 +175,7 @@ def gamma(v: nTypes) -> float:
     return 1 / math.sqrt(1-(v**2 / c**2))
 
 
-def forceOfGravity(m1: nTypes, m2: nTypes, r: Union[int, float, Vector]) -> Uniton[float, Vector]:
+def forceOfGravity(m1: nTypes, m2: nTypes, r: Union[int, float, Vector]) -> Union[float, Vector]:
     """
     
 
@@ -191,7 +193,7 @@ def forceOfGravity(m1: nTypes, m2: nTypes, r: Union[int, float, Vector]) -> Unit
     -------
     float | Vector
         If r is an int | float, the magnitude of the force of gravity. (N)
-        If r is a Vector, the force of gravity on body 2 by body 1. (N)
+        If r is a Vector, the force of gravity (as a Vector) on body 2 by body 1. (N)
         Uses Newton's law of universal gravitation
 
     """
@@ -220,8 +222,8 @@ def forceOfElectromagnetism(q1: nTypes, q2: nTypes, r: Union[int, float, Vector]
     -------
     float | Vector
         If r is an int | float, the magnitude of the force of electromagnetism. (N)
-        If r is a Vector, the force of gravity on body 2 by body 1. (N)
-        Uses Newton's law of universal gravitation
+        If r is a Vector, the force of electromagnetism (as a Vector) on body 2 by body 1. (N)
+        Uses Coulomb's Law
 
     """
     if isinstance(r, Vector):                        #If it's a vector
@@ -232,27 +234,42 @@ def forceOfElectromagnetism(q1: nTypes, q2: nTypes, r: Union[int, float, Vector]
         return -(EC * q1 * q2) / (r**2)  #Return scalar value
 
     
-def nearEarthForceOfGravity(m): #Simply mg for near-Earth approximations
+def nearEarthForceOfGravity(m: nTypes) -> nTypes: 
+    """
+    
+
+    Parameters
+    ----------
+    m : numerical (int | float)
+        Mass of object near surface of Earth, with mass negligible compared to mass of Earth.
+
+    Returns
+    -------
+    numerical (int | float)
+        magnitude of gravity exerted on the object by the Earth (N).
+
+    """
     checkNType(m)
     return m * g
     
-def hookesLaw(ks, L, Lr): #Checked, Works!
+def hookesLaw(ks, L, Lr):
     """
     
     Parameters
     ----------
-    ks : Float | Int
+    ks : numerical (int | float)
         "Spring Stiffness" (N/m)
-    L : Vector | Float | Int 
-        Vector from base of spring to end of spring (will return Vector)
-            OR
-        Distance from base of spring to end of spring (will return scalar)
-    Lr : Float | Int
+    L : numerical (int | float) OR Vector
+        if Vector, Vector from base of spring to end of spring 
+        if int | float, Distance from base of spring to end of spring
+    Lr : numerical (int | float)
         "Relaxed Length" (m) 
 
     Returns
     -------
-    Force done by spring (Vector)
+    float | Vector
+        If L is an int | float, the magnitude of the spring force. (N)
+        If L is a Vector, the force of the spring (as a Vector). (N)
 
     """
     if type(L) == Vector:    
@@ -265,7 +282,7 @@ def hookesLaw(ks, L, Lr): #Checked, Works!
         return -ks*stretch
 
 
-def maxForceOfFriction(mu, Fn):
+def maxForceOfFriction(mu: nTypes, Fn: nTypes) -> nTypes:
     """
     
 
@@ -358,5 +375,15 @@ if __name__ == "__main__":
         constFile = open("constantsFile.txt", "w")
         restoreDefaultConstants(constFile)
         constFile.close()
+    
+    running = True
+    
+    while running:
+        _in = input()
+        if _in.strip().lower() == "quit" or _in.strip().lower() == "exit":
+            running = False
+        exec(_in)
+    
+
         
         
