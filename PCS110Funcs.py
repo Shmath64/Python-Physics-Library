@@ -288,39 +288,40 @@ def maxForceOfFriction(mu: nTypes, Fn: nTypes) -> nTypes:
 
     Parameters
     ----------
-    mu : Coefficent of friction
-        DESCRIPTION.
-    Fn : Normal Force
-        DESCRIPTION.
+    mu : numerical (int | float)
+        Coefficent of friction.
+    Fn : numerical (int | float)
+        Normal Force.
 
     Returns
     -------
-    Float
+    Float | int
+        The maxmimum force of friction that can be exerted (N)
 
     """
     checkNType(mu, Fn)
     return mu * Fn #Product of coefficent of friction and the normal force
 
-def youngsModulus(Ft, A, dL, Lr): #Checked, Works!
+def youngsModulus(Ft: nTypes, A: nTypes, dL: nTypes, Lr: nTypes) -> nTypes: #Checked, Works!
     """
     
 
     Parameters
     ----------
-    Ft : Force of Tension (N)
-        DESCRIPTION.
-    A : Area (m**2)
-        DESCRIPTION.
-    dL : Stretch (m)
-        DESCRIPTION.
-    Lr : Relaxed Length (m)
-        DESCRIPTION.
+    Ft : numerical (int | float)
+        Force of Tension (N).
+    A : numerical (int | float)
+        Area (m**2).
+    dL : numerical (int | float)
+        Stretch (m).
+    Lr : numerical (int | float)
+        Relaxed Length (m).
 
     Returns
     -------
-    Float (N/m**2) or Pa
+    Float 
         Young's Modulus;
-        The "stretchiness" of a material regardless of size/shape
+        The "stretchiness" of a material regardless of size/shape (N/m**2) or Pa
         Always a pull force; "You can't push a rope"
 
     """
@@ -328,17 +329,51 @@ def youngsModulus(Ft, A, dL, Lr): #Checked, Works!
     checkNType(Ft, A, dL, Lr)
     return (Ft / A) / (dL / Lr) #Formula: stress (Ft/A) / strain (dL/Lr)
     
-def restEnergy(m): #mc**2
+def restEnergy(m): 
+    """
+    
+
+    Parameters
+    ----------
+    m : numerical (int | float)
+        mass of object (kg).
+
+    Returns
+    -------
+    numerical (int | float)
+        The rest energy of an object (J).
+        Calculated with: E = m*c**2
+
+    """
+    
     checkNType(m)
     return m * (c**2)
 
-def kineticEnergy(v, m): #gamma(mc**2) - mc**2 OR 1/2 mv**2
+def kineticEnergy(v, m):
+    """
+    
+
+    Parameters
+    ----------
+    v : numerical (int | float)
+        Speed (m/s).
+    m : numerical (int | float)
+        Mass of object (kg).
+
+    Returns
+    -------
+    numerical (int | float)
+        Kinetic energy of object (J).
+        If v >= relativisticThreshold * c, then the calculation is relativistic: (mc^2)(gamma - 1)
+        Otherwise, the calculation is non-relativistic, 1/2mv^2
+
+    """
     checkNType(v, m)
     #The "relativisticThreshold" determines which equation for kinetic energy should be used
-    if v >= relativisticThreshold*c:
-        return gamma(v)*restEnergy(m) - restEnergy(m)
+    if v >= relativisticThreshold*c: 
+        return gamma(v)*restEnergy(m) - restEnergy(m) #'Gamma times rest energy, minus rest energy'; Relativistic
     else:
-        return 0.5 * m * (v**2)
+        return 0.5 * m * (v**2) #'Half mass times speed squared'
         
 def updateConstantsFromFile(file):
     global g
