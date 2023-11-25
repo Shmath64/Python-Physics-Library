@@ -4,6 +4,29 @@ Created on Tue Nov 21 16:03:40 2023
 
 @author: 64mda
 """
+
+"""
+    In my physics course, PCS110, assignments use a long list of equations and constants. 
+I often find myself using the Python IDLE as a calculator: storing relevant constants as variables for 
+easy use in calculations and occasionally writing simple functions I’ll need more than once. The goal 
+of this project is to create a python module specifically designed for PCS110, as well as a simple 
+GUI (made with tkinter) to interact with it.
+	This module, named “PCS110Funcs” will have 11 useful constants defined as global variables, 
+the default value of these constants will be assigned right away. This module will define a class 
+called “Vector”, with 3 instance attributes (x, y, z); useful methods (magnitude, unit); and static 
+methods (scalarMultiply, componentsFromAngles). This module will also have its own function for checking 
+appropriate value types for its functions and methods (checkNType); as well as several important functions 
+in the PCS110 course: (gamma, forceOfGravity, forceOfElectromagnetism, nearEarthForceOfGravity, hookesLaw, 
+maxForceOfFriction, youngsModulus, restEnergy, and kinetic Energy) - and docstrings for each one. 
+For physics questions that require less (or more) precision of constants (e.g. “let g = 10 N/kg”), 
+this module also can read new values for its constants from a a file named "constantsFile.txt"; this acts 
+as an "input" file. The program has the ability to overwrite this file with the default constant values.
+	The tkinter GUI, named “cps109_a1.py”, provides a very simple interface for interacting with many 
+of the functions (and constants) of PCS110Funcs. Any output from calculations performed in the GUI are 
+displayed in the GUI itself, saved to a .txt file named “cps109_a1_output.txt”, and sent to a “print” statement.
+
+"""
+
 from tkinter import *
 import PCS110Funcs as Pf
 
@@ -22,8 +45,9 @@ def printOutput(output: str) -> None:
 def BPSaveVector1():
     global vector1
     vector1 = Pf.Vector(float(vector1xEntry.get()),float(vector1yEntry.get()),float(vector1zEntry.get()))
-    vector1AnsLabel["text"] = f"Vector1 = {str(vector1)}"
-    printOutput(str(vector1))
+    ans = f"Vector1 = {str(vector1)}"
+    vector1AnsLabel["text"] = ans
+    printOutput(ans)
 
 def BPGamma():
     v = float(gammavEntry.get())
