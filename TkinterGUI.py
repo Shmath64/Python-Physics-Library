@@ -12,25 +12,31 @@ root.title("PCS110 Functions and Constants - Scientific notation (e.g. '7.2e6') 
 
 vector1 = Pf.Vector(0,0,0)
 
+def printOutput(output: str) -> None:
+    outputFile = open("cps109_a1_output.txt", "a")
+    outputFile.write(output + "\n")
+    outputFile.close()
+    print(output)
+
 def BPSaveVector1():
     global vector1
     vector1 = Pf.Vector(float(vector1xEntry.get()),float(vector1yEntry.get()),float(vector1zEntry.get()))
     vector1AnsLabel["text"] = f"Vector1 = {str(vector1)}"
-    print(vector1)
+    printOutput(str(vector1))
 
 def BPGamma():
     v = float(gammavEntry.get())
     ans = str(Pf.gamma(v))
     gammaAnsLabel["text"] = ans
-    print("Gamma = " + ans)
+    printOutput("Gamma = " + ans)
 
 def BPFGrav(): #Scalar calculation of force of gravity
     m1 = float(fGravm1Entry.get())
     m2 = float(fGravm2Entry.get())
     r = float(fGravrEntry.get())
-    ans = str(Pf.forceOfGravity(m1, m2, r))
-    fGravAnsLabel["text"] = ans + " N"
-    print("Force of Gravity = " + ans)
+    ans = str(Pf.forceOfGravity(m1, m2, r)) + " N"
+    fGravAnsLabel["text"] = ans 
+    printOutput("Force of Gravity = " + ans)
     
 def BPFGravV(): #Vector calculation of force of gravity
     m1 = float(fGravVm1Entry.get())
@@ -38,8 +44,24 @@ def BPFGravV(): #Vector calculation of force of gravity
     r = vector1
     ans = str(Pf.forceOfGravity(m1, m2, r)) + " N"
     fGravVAnsLabel["text"] = ans
-    print("Force of Gravity = " + ans)
+    printOutput("Force of Gravity = " + ans)
+
     
+def BPFElec(): #Scalar calculation of force of electricity
+    q1 = float(fElecq1Entry.get())
+    q2 = float(fElecq2Entry.get())
+    r = float(fElecrEntry.get())
+    ans = str(Pf.forceOfElectromagnetism(q1, q2, r)) + " N"
+    fElecAnsLabel["text"] = ans + " N"
+    printOutput("Electric Force = " + ans)
+    
+def BPFElecV(): #Vector calculation of force of electricity
+    q1 = float(fElecVq1Entry.get())
+    q2 = float(fElecVq2Entry.get())
+    r = vector1
+    ans = str(Pf.forceOfElectromagnetism(q1, q2, r)) + " N"
+    fElecVAnsLabel["text"] = ans
+    printOutput("Electric Force = " + ans)
 
 
 #Constants
@@ -77,12 +99,28 @@ fGravVm2Label = Label(root, text="m2 =")
 fGravVrLabel = Label(root, text="r =")
 fGravVAnsLabel = Label(root, text="")
 
+fElecFuncLabel = Label(root, text="Electric Force (Scalar):") #Force of Electricity (scalar) labels
+fElecAnsLabel = Label(root, text="")
+fElecq1Label = Label(root, text="q1 =")
+fElecq2Label = Label(root, text="q2 =")
+fElecrLabel = Label(root, text="r =")
+fElecAnsLabel = Label(root, text="")
+
+fElecVFuncLabel = Label(root, text="Electric Force (Vector):") #Force of Electricity (Vector) labels
+fElecVAnsLabel = Label(root, text="")
+fElecVq1Label = Label(root, text="q1 =")
+fElecVq2Label = Label(root, text="q2 =")
+fElecVrLabel = Label(root, text="r =")
+fElecVAnsLabel = Label(root, text="")
+
 
 #BUTTONS:
 vector1Button = Button(root, text="Save", command=BPSaveVector1)
 gammaButton = Button(root, text="RUN", command=BPGamma)
 fGravButton = Button(root, text="RUN", command=BPFGrav)
 fGravVButton = Button(root, text="RUN", command=BPFGravV)
+fElecButton = Button(root, text="RUN", command=BPFElec)
+fElecVButton = Button(root, text="RUN", command=BPFElecV)
 
 
 #Entry:
@@ -100,13 +138,24 @@ fGravVm1Entry = Entry(root, width=standardWidth) #Force of gravity (vector) entr
 fGravVm2Entry = Entry(root, width=standardWidth)
 fGravVrEntry_Label = Label(root, text="Vector 1") #In entry location, but it is a label because r comes from Vector1
 
+fElecq1Entry = Entry(root, width=standardWidth) #Force of Electricity (scalar) entry
+fElecq2Entry = Entry(root, width=standardWidth)
+fElecrEntry = Entry(root, width=standardWidth)
+
+fElecVq1Entry = Entry(root, width=standardWidth) #Force of Electricity (vector) entry
+fElecVq2Entry = Entry(root, width=standardWidth)
+fElecVrEntry_Label = Label(root, text="Vector 1") #In entry location, but it is a label because r comes from Vector1
+
 #COLLECTIONS:
 #introParts = [introFuncsLabel,nullLabel,introInputsLabel]
 vector1Parts = [vector1FuncLabel, vector1xLabel,vector1xEntry, vector1yLabel,vector1yEntry, vector1zLabel,vector1zEntry, vector1Button, vector1AnsLabel]
 gammaParts = [gammaFuncLabel, gammavLabel, gammavEntry, gammaButton, gammaAnsLabel]
 fGravParts = [fGravFuncLabel, fGravm1Label, fGravm1Entry, fGravm2Label, fGravm2Entry, fGravrLabel, fGravrEntry, fGravButton,fGravAnsLabel]
 fGravVParts = [fGravVFuncLabel, fGravVm1Label, fGravVm1Entry, fGravVm2Label, fGravVm2Entry, fGravVrLabel, fGravVrEntry_Label, fGravVButton,fGravVAnsLabel]
-allFunctions = [vector1Parts, gammaParts, fGravParts, fGravVParts]
+fElecParts = [fElecFuncLabel, fElecq1Label, fElecq1Entry, fElecq2Label, fElecq2Entry, fElecrLabel, fElecrEntry, fElecButton,fElecAnsLabel]
+fElecVParts = [fElecVFuncLabel, fElecVq1Label, fElecVq1Entry, fElecVq2Label, fElecVq2Entry, fElecVrLabel, fElecVrEntry_Label, fElecVButton,fElecVAnsLabel]
+
+allFunctions = [vector1Parts, gammaParts, fGravParts, fGravVParts, fElecParts, fElecVParts]
 
 #PLACEMENTS:
 

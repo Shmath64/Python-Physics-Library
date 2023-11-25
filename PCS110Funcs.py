@@ -231,7 +231,7 @@ def forceOfElectromagnetism(q1: nTypes, q2: nTypes, r: Union[int, float, Vector]
         return Vector.scalarMultiply(r.unit(), fMag) #Return vector value
     
     elif checkNType(r):                 #If not a vector
-        return -(EC * q1 * q2) / (r**2)  #Return scalar value
+        return (EC * q1 * q2) / (r**2)  #Return scalar value
 
     
 def nearEarthForceOfGravity(m: nTypes) -> nTypes: 
@@ -376,6 +376,18 @@ def kineticEnergy(v, m):
         return 0.5 * m * (v**2) #'Half mass times speed squared'
         
 def updateConstantsFromFile(file):
+    """
+
+    Parameters
+    ----------
+    file : _io.TextIOWrapper
+        An open .txt file to read constants from, and assign to global variables in this program.
+
+    Returns
+    -------
+    None.
+
+    """
     global g
     lines = file.readlines()
     for line in lines:
@@ -386,11 +398,28 @@ def updateConstantsFromFile(file):
         
             
 def updateConstants():
+    """
+    Updates the constants in this program using the default, 'constantsFile.txt' file.
+
+    Returns
+    -------
+    None.
+
+    """
     file = open("constantsFile.txt", "r")
     updateConstantsFromFile(file)
     file.close()
 
 def restoreDefaultConstants():
+    """
+    Restores default constants in this program and overwrites constantsFile.txt with
+    the default values.
+
+    Returns
+    -------
+    None.
+
+    """
     open('constantsFile.txt', 'w').close() #Clears content of file
     file = open("constantsFile.txt", "w")
     for c in defaultConstants: #Writes each constant to file
@@ -401,22 +430,22 @@ def restoreDefaultConstants():
     f.close()
     
     
-if __name__ == "__main__":
-    try:
+if __name__ == "__main__": 
+    try: # to get constants from file if it exists
         constFile = open("constantsFile.txt", "r")
-        updateConstantsFromFile(constFile)
+        updateConstantsFromFile(constFile) 
         constFile.close()
-    except FileNotFoundError:
+    except FileNotFoundError: #Create constantsFile.txt if it doesn't exist
         constFile = open("constantsFile.txt", "w")
         restoreDefaultConstants(constFile)
         constFile.close()
     
-    running = True
+    running = True # Let the program run in an infinite loop
     
     while running:
         _in = input()
         if _in.strip().lower() == "quit" or _in.strip().lower() == "exit":
-            running = False
+            running = False #Exits the loop, terminating the program
         exec(_in)
     
 
