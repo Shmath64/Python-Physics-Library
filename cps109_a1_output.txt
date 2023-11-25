@@ -2,3 +2,21 @@ Electric Force = -3110.4622089331324
 <1234.0, 423.0, 12.0>
 <2234.0, 432.0, 12.0>
 Electric Force = <-88492814.81112137, -17112307.9670566, -475341.8879737943> N
+<234.0, 423.0, 123.0>
+Electric Force = <-156460857537.02716, -282833088624.62604, -82242245628.43736> N
+<1.0, 1.0, 1.0>
+Electric Force = <-1732050807.5688777, -1732050807.5688777, -1732050807.5688777> N
+Gamma = 1.0000000000995461
+Gamma = 1.0000084618100475
+Gamma = 5.500190982169272
+<10000.0, 0.0, 0.0>
+Force of Gravity = <-9.647999999999999e-13, -0.0, -0.0> N
+Updated constants from constantsFile.txt
+Force of Gravity = <-9.647999999999999e-13, -0.0, -0.0> N
+Restored Default constants
+<10000.0, 0.0, 0.0>
+Force of Gravity = <-9.647999999999999e-17, -0.0, -0.0> N
+Updated constants from constantsFile.txt
+Force of Gravity = <-1.728e-05, -0.0, -0.0> N
+Updated constants from constantsFile.txt
+Restored Default constants

@@ -18,6 +18,7 @@ def printOutput(output: str) -> None:
     outputFile.close()
     print(output)
 
+#BP => "Button Pressed"
 def BPSaveVector1():
     global vector1
     vector1 = Pf.Vector(float(vector1xEntry.get()),float(vector1yEntry.get()),float(vector1zEntry.get()))
@@ -62,51 +63,72 @@ def BPFElecV(): #Vector calculation of force of electricity
     ans = str(Pf.forceOfElectromagnetism(q1, q2, r)) + " N"
     fElecVAnsLabel["text"] = ans
     printOutput("Electric Force = " + ans)
+    
+def BPUpdateConstants(): #Update constants from file (handled by PCS110Funcs)
+    try:
+        Pf.updateConstants()
+        printOutput("Updated constants from constantsFile.txt")
+    except:
+        printOutput("Failed to update constants from constantsFile.txt")
+
+def BPRestoreDefaults(): #Restore default constants (handled by PCS110Funcs)
+    try:
+        Pf.restoreDefaultConstants()
+        printOutput("Restored Default constants")
+    except:
+        printOutput("Failed to restore default constants")
 
 
 #Constants
 reservedRows = 1
 standardWidth = 10
 
-#LABELS:
+#---LABELS---
 nullLabel = Label(root, text="") #Used for spacing
 
-introFuncsLabel = Label(root, text="-Functions-") #Headings for the columns
+#Headings for the columns
+introFuncsLabel = Label(root, text="-Functions-") 
 introInputsLabel = Label(root, text="-Inputs-")
 introOutputsLabel = Label(root, text="-Outputs-")
     
-vector1FuncLabel = Label(root, text="Vector 1:") #Vector1 labels
+#Vector1 labels
+vector1FuncLabel = Label(root, text="Vector 1:") 
 vector1xLabel = Label(root, text="x =")
 vector1yLabel = Label(root, text="y =")
 vector1zLabel = Label(root, text="z =")
 vector1AnsLabel = Label(root, text="")
 
-gammaFuncLabel = Label(root, text="Gamma (Lorentz Factor):") #Gamma func labels
+#Gamma func labels
+gammaFuncLabel = Label(root, text="Gamma (Lorentz Factor):") 
 gammaAnsLabel = Label(root, text="")
 gammavLabel = Label(root, text="v =")
 
-fGravFuncLabel = Label(root, text="Force Of Gravity (Scalar):") #Force of gravity (scalar) labels
+#Force of gravity (scalar) labels
+fGravFuncLabel = Label(root, text="Force Of Gravity (Scalar):") 
 fGravAnsLabel = Label(root, text="")
 fGravm1Label = Label(root, text="m1 =")
 fGravm2Label = Label(root, text="m2 =")
 fGravrLabel = Label(root, text="r =")
 fGravAnsLabel = Label(root, text="")
 
-fGravVFuncLabel = Label(root, text="Force Of Gravity (Vector):") #Force of gravity (Vector) labels
+#Force of gravity (Vector) labels
+fGravVFuncLabel = Label(root, text="Force Of Gravity (Vector):") 
 fGravVAnsLabel = Label(root, text="")
 fGravVm1Label = Label(root, text="m1 =")
 fGravVm2Label = Label(root, text="m2 =")
 fGravVrLabel = Label(root, text="r =")
 fGravVAnsLabel = Label(root, text="")
 
-fElecFuncLabel = Label(root, text="Electric Force (Scalar):") #Force of Electricity (scalar) labels
+#Force of Electricity (scalar) labels
+fElecFuncLabel = Label(root, text="Electric Force (Scalar):") 
 fElecAnsLabel = Label(root, text="")
 fElecq1Label = Label(root, text="q1 =")
 fElecq2Label = Label(root, text="q2 =")
 fElecrLabel = Label(root, text="r =")
 fElecAnsLabel = Label(root, text="")
 
-fElecVFuncLabel = Label(root, text="Electric Force (Vector):") #Force of Electricity (Vector) labels
+#Force of Electricity (Vector) labels
+fElecVFuncLabel = Label(root, text="Electric Force (Vector):") 
 fElecVAnsLabel = Label(root, text="")
 fElecVq1Label = Label(root, text="q1 =")
 fElecVq2Label = Label(root, text="q2 =")
@@ -114,7 +136,7 @@ fElecVrLabel = Label(root, text="r =")
 fElecVAnsLabel = Label(root, text="")
 
 
-#BUTTONS:
+#---BUTTONS---
 vector1Button = Button(root, text="Save", command=BPSaveVector1)
 gammaButton = Button(root, text="RUN", command=BPGamma)
 fGravButton = Button(root, text="RUN", command=BPFGrav)
@@ -122,8 +144,10 @@ fGravVButton = Button(root, text="RUN", command=BPFGravV)
 fElecButton = Button(root, text="RUN", command=BPFElec)
 fElecVButton = Button(root, text="RUN", command=BPFElecV)
 
+restoreDefaultsButton = Button(root, text="Restore Default Constants", command=BPRestoreDefaults)
+updateConstantsButton = Button(root, text="Update Constants (from file)", command=BPUpdateConstants)
 
-#Entry:
+#---ENTRIES---
 vector1xEntry = Entry(root, width=standardWidth) #Vector1 argument entry
 vector1yEntry = Entry(root, width=standardWidth)
 vector1zEntry = Entry(root, width=standardWidth)
@@ -146,10 +170,10 @@ fElecVq1Entry = Entry(root, width=standardWidth) #Force of Electricity (vector) 
 fElecVq2Entry = Entry(root, width=standardWidth)
 fElecVrEntry_Label = Label(root, text="Vector 1") #In entry location, but it is a label because r comes from Vector1
 
-#COLLECTIONS:
+#---COLLECTIONS---
 #introParts = [introFuncsLabel,nullLabel,introInputsLabel]
 vector1Parts = [vector1FuncLabel, vector1xLabel,vector1xEntry, vector1yLabel,vector1yEntry, vector1zLabel,vector1zEntry, vector1Button, vector1AnsLabel]
-gammaParts = [gammaFuncLabel, gammavLabel, gammavEntry, gammaButton, gammaAnsLabel]
+gammaParts = [gammaFuncLabel, gammavLabel, gammavEntry, nullLabel, nullLabel, nullLabel, nullLabel, gammaButton, gammaAnsLabel]
 fGravParts = [fGravFuncLabel, fGravm1Label, fGravm1Entry, fGravm2Label, fGravm2Entry, fGravrLabel, fGravrEntry, fGravButton,fGravAnsLabel]
 fGravVParts = [fGravVFuncLabel, fGravVm1Label, fGravVm1Entry, fGravVm2Label, fGravVm2Entry, fGravVrLabel, fGravVrEntry_Label, fGravVButton,fGravVAnsLabel]
 fElecParts = [fElecFuncLabel, fElecq1Label, fElecq1Entry, fElecq2Label, fElecq2Entry, fElecrLabel, fElecrEntry, fElecButton,fElecAnsLabel]
@@ -159,28 +183,23 @@ allFunctions = [vector1Parts, gammaParts, fGravParts, fGravVParts, fElecParts, f
 
 #PLACEMENTS:
 
-'''
-gammaFuncLabel.grid(row=gammaRow, column=0)
-gammavLabel.grid(row=gammaRow, column=1)
-gammavEntry.grid(row=gammaRow, column=2)
-gammaButton.grid(row=gammaRow, column=3)
-gammaAnsLabel.grid(row=gammaRow,column=4)
-'''
-
+#"Intro" labels; subheadings of the function, input, and output areas
 introFuncsLabel.grid(row=0,column=0)
 introInputsLabel.grid(row=0,column=2)
 introOutputsLabel.grid(row=0,column=8)
 
-for i, collection in enumerate(allFunctions):
-    for j, part in enumerate(collection):
-        part.grid(row=i+reservedRows,column=j)
+numOfRows = len(allFunctions) #total num of functions = numOfRows to display
+rowNum = 0 #What row is currently being "placed" onto the GUI
 
-'''
-for i, part in enumerate(gammaParts):
-    part.grid(row=gammaRow,column=i)
+while rowNum < numOfRows: #While there are more rows to display
+    for j, part in enumerate(allFunctions[rowNum]): #Display every part of that row
+        part.grid(row = rowNum + reservedRows, column=j) #Add to GUI
+    rowNum += 1 #Increment rowNum
 
-for i, part in enumerate(fGravParts):
-    part.grid(row=fGravRow,column=i)
-'''
-
-root.mainloop()
+#Add the "restoreDefaults" and "updateConstants" buttons at the bottom
+rowNum += 1
+restoreDefaultsButton.grid(row = rowNum, column=0)
+rowNum += 1
+updateConstantsButton.grid(row = rowNum, column=0)
+    
+root.mainloop() #tKinter loop 

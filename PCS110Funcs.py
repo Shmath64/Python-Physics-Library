@@ -331,7 +331,7 @@ def youngsModulus(Ft: nTypes, A: nTypes, dL: nTypes, Lr: nTypes) -> nTypes: #Che
     
 def restEnergy(m): 
     """
-    
+    E = mc^2
 
     Parameters
     ----------
