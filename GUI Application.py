@@ -36,7 +36,7 @@ root.title("PCS110 Functions and Constants - Scientific notation (e.g. '7.2e6') 
 vector1 = Pf.Vector(0,0,0)
 
 def printOutput(output: str) -> None:
-    outputFile = open("cps109_a1_output.txt", "a")
+    outputFile = open("OutputLog", "a")
     outputFile.write(output + "\n")
     outputFile.close()
     print(output)
